@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>函数</title>
+  <meta charset="utf-8" />
+  <script src="jquery-1.11.3.js"></script>
+  <style>
+	
+	#bgcolor{
+		margin:0;
+		padding:0;
+		width:100%;
+		height:480px;
+		border:3px solid red;
+		background-color:#FFF21A;
+	}
+	#slider{
+		width:810px;
+		height:480px;
+		border:1px solid #000;
+		overflow:hidden;
+		margin:0 auto;
+		padding:0;
+		position:relative;
+	}
+	#slider ul{
+		position:absolute;
+		margin:0;
+		padding:0;
+	}
+	#slider ul li{
+		float:left;
+		width:100%;
+		height:480px;
+		margin:0;
+		padding:0;
+		
+	}
+	#slider ul.btn{
+		position:absolute;
+		bottom:10px;
+		left:300px;
+
+	}
+	#slider ul.btn li{
+		float:left;
+		width:25px;
+		height:25px;
+		margin:8px;
+		border-radius:50%;
+		background-color:gray;
+		list-style:none;
+	}
+  </style>
+ </head>
+ <body>
+	<div id="bgcolor">
+		<div id="slider">
+			<ul class="pic">
+				<li><a href="#"><img src="images/lunbo01.jpg"/></a></li>
+				<li><a href="#"><img src="images/lunbo02.jpg"/></a></li>
+				<li><a href="#"><img src="images/lunbo03.jpg"/></a></li>
+				<li><a href="#"><img src="images/lunbo04.jpg"/></a></li>
+				<li><a href="#"><img src="images/lunbo05.jpg"/></a></li>
+			</ul>
+			<!--
+			<ul class="btn">
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+			-->
+		<div>
+	</div>
+ </body>
+ <script>
+	var sWidth=$("#slider").width();
+	var len=$("#slider ul li").length;
+	var index=0;
+	var timer;
+
+	var btn="<ul class='btn'>";
+	for(var i=0;i<len;i++){
+		btn+="<li></li>";
+	}
+	btn+="</ul>"
+	$("#slider").append(btn);
+
+	$("#slider ul.btn li").hover(function(){
+		index=$("#slider ul.btn li").index(this);
+		showPics(index);
+		$("#slider ul.btn li").css("background-color","red");
+
+	});
+	$("#slider ul").css("width",sWidth * len);  
+      
+    //鼠标滑上焦点图时停止自动播放，滑出时开始自动播放  
+    $("#slider").hover(function() {  
+        clearInterval(timer);  
+    },function() {  
+       timer = setInterval(function() {  
+            if(index == len) { //如果索引值等于li元素个数，说明最后一张图播放完毕，接下来要显示第一张图，即调用showFirPic()，然后将索引值清零  
+                index = 0;  
+                showFirstPic();  
+            } else { //如果索引值不等于li元素个数，按普通状态切换，调用showPics()  
+                showPics(index);  
+            }  
+            index++;  
+        },2000); //此2000代表自动播放的间隔，单位：毫秒  
+    });  
+
+	function showPics(index){
+		var nowLeft=-index*sWidth;
+		$("#slider ul").animate({"left":nowLeft},500);
+		$("#slider ul.btn li").eq(index).animate({"background-color":"red"},100);
+	}
+
+	function showFirstPic(){
+		$("slider ul").append($("#slider ul li:first").clone());
+		var nowLeft=-len*sWidth;
+		$("#slider ul").stop(true,false).animate({"left":nowLeft},500,function(){
+			$("#slider ul").css("left",0);
+			$("#slider ul li:last").remove();
+		});
+		$("#slider ul.btn li").eq(index).animate({"background-color":"red"},100);
+	}
+ </script>
+</html>
